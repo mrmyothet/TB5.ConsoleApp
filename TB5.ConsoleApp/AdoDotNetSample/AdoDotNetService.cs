@@ -12,7 +12,27 @@ namespace TB5.ConsoleApp.AdoDotNetSample
     {
 
         // fields
-        string connectionString = @"Data Source=MYOTHETPC\\MSSQLEXPRESS2022;Initial Catelog = Batch5MiniPOS; User ID = sa; Password=admin123!;TrustedServerCertificate=True";
+        string? connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
+
+        public async Task<bool> CanConnectSQLServerAsync()
+        {
+            if (string.IsNullOrWhiteSpace(connectionString))
+            {
+                Console.WriteLine("Missing CONNECTION_STRING");
+                return false;
+            }
+
+            using var connection = new SqlConnection(connectionString);
+            try
+            {
+                await connection.OpenAsync();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
 
         public void Create()
         {
