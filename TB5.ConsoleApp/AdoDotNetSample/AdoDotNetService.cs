@@ -12,7 +12,11 @@ namespace TB5.ConsoleApp.AdoDotNetSample
     {
 
         // fields
-        string? connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
+        // SELECT @@SERVERNAME
+        // SELECT DB_NAME();
+
+        //string? connectionString = Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTION_STRING");
+        private string connectionString = Environment.GetEnvironmentVariable("LOCAL_SQL_CONNECTION_STRING")!;
 
         public async Task<bool> CanConnectSQLServerAsync()
         {
@@ -21,6 +25,7 @@ namespace TB5.ConsoleApp.AdoDotNetSample
                 Console.WriteLine("Missing CONNECTION_STRING");
                 return false;
             }
+            //Console.WriteLine(connectionString);
 
             using var connection = new SqlConnection(connectionString);
             try
@@ -28,37 +33,37 @@ namespace TB5.ConsoleApp.AdoDotNetSample
                 await connection.OpenAsync();
                 return true;
             }
-            catch
+            catch(Exception ex)
             {
+                Console.WriteLine("Failed to connect to SQL Server.");
+                Console.WriteLine(ex.Message);
                 return false;
             }
         }
 
-        public void Create()
+        public void Create(string productName, decimal productPrice)
         {
             string query = @"
                 INSERT INTO [dbo].[Tbl_Product]
-                       ([ProductCode]
-                       ,[ProductName]
+                       ([Name]
                        ,[Price])
                  VALUES
-                       (@ProductCode
-                       ,@ProductName
+                       (@Name
                        ,@Price)";
 
-            SqlConnection connection = new SqlConnection();
+            SqlConnection connection = new SqlConnection(connectionString);
             connection.Open();
 
             SqlCommand cmd = new SqlCommand(query, connection);
-            cmd.Parameters.AddWithValue("@ProductCode", "P001");
-            cmd.Parameters.AddWithValue("@ProductName", "Strawberry");
-            cmd.Parameters.AddWithValue("@Price", 500);
+            cmd.Parameters.AddWithValue("@Name", productName);
+            cmd.Parameters.AddWithValue("@Price", productPrice);
 
             int result = cmd.ExecuteNonQuery();
 
+            connection.Close();
 
-
-
+            string mesage = result > 0 ? "Product creation successful." : "Product creation failed.";
+            Console.WriteLine(mesage);
 
         }
 
@@ -72,13 +77,49 @@ namespace TB5.ConsoleApp.AdoDotNetSample
 
         }
 
-        public void Update()
+        public void Update(int productId, string productName, decimal productPrice)
         {
+            string query = @"
+                UPDATE [dbo].[Tbl_Product]
+                SET [Name] = @Name
+                    ,[Price] = @Price
+                WHERE Id = @Id";
 
+            SqlConnection connection = new SqlConnection(connectionString);
+            connection.Open();
+
+            SqlCommand cmd = new SqlCommand(query, connection);
+            cmd.Parameters.AddWithValue("@Id", productId);
+            cmd.Parameters.AddWithValue("@Name", productName);
+            cmd.Parameters.AddWithValue("@Price", productPrice);
+
+            int result = cmd.ExecuteNonQuery();
+
+            connection.Close();
+
+            string mesage = result > 0 ? "Product Update successful." : "Product Update failed.";
+            Console.WriteLine(mesage);
         }
 
-        public void Delete()
+        public void Delete(int productId)
         {
+            string query = @"
+                DELETE 
+                FROM [dbo].[Tbl_Product]
+                WHERE Id=@Id";
+
+            SqlConnection connection = new SqlConnection(connectionString);
+            connection.Open();
+
+            SqlCommand cmd = new SqlCommand(query, connection);
+            cmd.Parameters.AddWithValue("@Id", productId);
+
+            int result = cmd.ExecuteNonQuery();
+
+            connection.Close();
+
+            string mesage = result > 0 ? $"Delete Product Id {productId} successful." : $"Delete Product Id {productId} failed.";
+            Console.WriteLine(mesage);
         }   
     }
 
@@ -86,9 +127,7 @@ namespace TB5.ConsoleApp.AdoDotNetSample
     {
         public int Id { get; set; }
 
-        public string ProductCode { get; set; }
-
-        public string ProductName { get; set; }
+        public string Name { get; set; }
 
         public decimal Price { get; set; }
     }
