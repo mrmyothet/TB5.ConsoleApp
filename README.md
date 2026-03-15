@@ -46,3 +46,10 @@
 - Create, Update, Delete, Soft Delete
 - Read, Edit
 - List, Detail
+
+---
+
+![Tbl_Product](./screenshots/Tbl_Product.png)
+
+
+![Tbl_Sale](./screenshots/Tbl_Sale.png)
