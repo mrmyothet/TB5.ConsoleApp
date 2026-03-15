@@ -1,6 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -69,11 +70,70 @@ namespace TB5.ConsoleApp.AdoDotNetSample
 
         public void Read()
         {
+            string query = @"
+                SELECT [Id]
+                      ,[Name]
+                      ,[Price]
+                  FROM [dbo].[Tbl_Product]";
+
+            SqlConnection connection = new SqlConnection(connectionString);
+            connection.Open();
+
+            DataTable dt = new DataTable();
+            SqlCommand cmd = new SqlCommand(query, connection);
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+            da.Fill(dt);
+
+
+            connection.Close();
+
+            foreach (DataRow row in dt.Rows)
+            {
+                int Id = Convert.ToInt32(row["Id"]);
+                string Name = row["Name"].ToString() ?? string.Empty;
+                decimal Price = Convert.ToDecimal(row["Price"]);
+
+                Console.WriteLine($"Id: {Id}, Name: {Name}, Price: {Price}");
+            }
+
 
         }
 
-        public void Edit()
+        public void Edit(int productId)
         {
+            string query = @"
+                SELECT [Id]
+                      ,[Name]
+                      ,[Price]
+                  FROM [dbo].[Tbl_Product]
+                  WHERE Id = @Id";
+
+            SqlConnection connection = new SqlConnection(connectionString);
+            connection.Open();
+
+            DataTable dt = new DataTable();
+            SqlCommand cmd = new SqlCommand(query, connection);
+            cmd.Parameters.AddWithValue("@Id", productId);
+
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+            da.Fill(dt);
+
+
+            connection.Close();
+
+            if (dt.Rows.Count == 0)
+            {
+                Console.WriteLine($"Product with Id {productId} not found.");
+                return;
+            }
+
+            DataRow row = dt.Rows[0];
+
+            int Id = Convert.ToInt32(row["Id"]);
+            string Name = row["Name"].ToString() ?? string.Empty;
+            decimal Price = Convert.ToDecimal(row["Price"]);
+
+            Console.WriteLine($"Id: {Id}, Name: {Name}, Price: {Price}");
 
         }
 

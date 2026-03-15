@@ -32,6 +32,9 @@ Console.WriteLine(result ? "SQL Server connection successful." : "SQL Server con
 
 //service.Delete(1002);
 
+//service.Read();
+
+service.Edit(4);
 
 Console.ReadLine();
 
