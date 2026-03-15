@@ -43,6 +43,6 @@
 - pub.dev
 
 ##### CRUD 
-// Create, Update, Delete, Soft Delete
-// Read, Edit
-// List, Detail
+- Create, Update, Delete, Soft Delete
+- Read, Edit
+- List, Detail
