@@ -5,15 +5,15 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 
-namespace TB5.ConsoleApp.DapperSample.DapperSample
-{
-    public class SaleService
-    {
-        private string connectionString = Environment.GetEnvironmentVariable("LOCAL_SQL_CONNECTION_STRING")!;
+namespace TB5.ConsoleApp.DapperSample.DapperSample;
 
-        public void Create(int productId, decimal price, int quantity, DateTime? saleDate)
-        {
-            string query = @"
+public class SaleService
+{
+    private string connectionString = Environment.GetEnvironmentVariable("LOCAL_SQL_CONNECTION_STRING")!;
+
+    public void Create(int productId, decimal price, int quantity, DateTime? saleDate)
+    {
+        string query = @"
                 INSERT INTO [dbo].[Tbl_Sale]
                        ([ProductId]
                        ,[Price]
@@ -25,26 +25,26 @@ namespace TB5.ConsoleApp.DapperSample.DapperSample
                        ,@Quantity
                        ,@SaleDate)";
 
-            using IDbConnection connection = new SqlConnection(connectionString);
-            connection.Open();
+        using IDbConnection connection = new SqlConnection(connectionString);
+        connection.Open();
 
-            int result = connection.Execute(query, new
-            {
-                ProductId = productId,
-                Price = price,
-                Quantity = quantity,
-                SaleDate = saleDate
-            });
-
-            connection.Close();
-
-            string message = result > 0 ? "Sale creation successful." : "Sale creation failed.";
-            Console.WriteLine(message);
-        }
-
-        public void Read()
+        int result = connection.Execute(query, new
         {
-            string query = @"
+            ProductId = productId,
+            Price = price,
+            Quantity = quantity,
+            SaleDate = saleDate
+        });
+
+        connection.Close();
+
+        string message = result > 0 ? "Sale creation successful." : "Sale creation failed.";
+        Console.WriteLine(message);
+    }
+
+    public void Read()
+    {
+        string query = @"
                 SELECT [SaleId]
                       ,[ProductId]
                       ,[Price]
@@ -52,22 +52,22 @@ namespace TB5.ConsoleApp.DapperSample.DapperSample
                       ,[SaleDate]
                   FROM [dbo].[Tbl_Sale]";
 
-            using IDbConnection connection = new SqlConnection(connectionString);
-            connection.Open();
+        using IDbConnection connection = new SqlConnection(connectionString);
+        connection.Open();
 
-            List<Sale> results = connection.Query<Sale>(query).ToList();
+        List<Sale> results = connection.Query<Sale>(query).ToList();
 
-            connection.Close();
+        connection.Close();
 
-            foreach (Sale row in results)
-            {
-                Console.WriteLine($"SaleId: {row.SaleId}, ProductId: {row.ProductId}, Price: {row.Price}, Quantity: {row.Quantity}, SaleDate: {row.SaleDate}");
-            }
-        }
-
-        public void Edit(int saleId)
+        foreach (Sale row in results)
         {
-            string query = @"
+            Console.WriteLine($"SaleId: {row.SaleId}, ProductId: {row.ProductId}, Price: {row.Price}, Quantity: {row.Quantity}, SaleDate: {row.SaleDate}");
+        }
+    }
+
+    public void Edit(int saleId)
+    {
+        string query = @"
                 SELECT [SaleId]
                       ,[ProductId]
                       ,[Price]
@@ -76,25 +76,25 @@ namespace TB5.ConsoleApp.DapperSample.DapperSample
                   FROM [dbo].[Tbl_Sale]
                   WHERE SaleId = @SaleId";
 
-            using IDbConnection connection = new SqlConnection(connectionString);
-            connection.Open();
+        using IDbConnection connection = new SqlConnection(connectionString);
+        connection.Open();
 
-            Sale? result = connection.QueryFirstOrDefault<Sale>(query, new { SaleId = saleId });
+        Sale? result = connection.QueryFirstOrDefault<Sale>(query, new { SaleId = saleId });
 
-            connection.Close();
+        connection.Close();
 
-            if (result is null)
-            {
-                Console.WriteLine($"Sale Id {saleId} not found.");
-                return;
-            }
-
-            Console.WriteLine($"SaleId: {result.SaleId}, ProductId: {result.ProductId}, Price: {result.Price}, Quantity: {result.Quantity}, SaleDate: {result.SaleDate}");
+        if (result is null)
+        {
+            Console.WriteLine($"Sale Id {saleId} not found.");
+            return;
         }
 
-        public void Update(int saleId, int productId, decimal price, int quantity, DateTime? saleDate)
-        {
-            string query = @"
+        Console.WriteLine($"SaleId: {result.SaleId}, ProductId: {result.ProductId}, Price: {result.Price}, Quantity: {result.Quantity}, SaleDate: {result.SaleDate}");
+    }
+
+    public void Update(int saleId, int productId, decimal price, int quantity, DateTime? saleDate)
+    {
+        string query = @"
                 UPDATE [dbo].[Tbl_Sale]
                 SET [ProductId] = @ProductId
                     ,[Price] = @Price
@@ -102,40 +102,39 @@ namespace TB5.ConsoleApp.DapperSample.DapperSample
                     ,[SaleDate] = @SaleDate
                 WHERE SaleId = @SaleId";
 
-            using IDbConnection connection = new SqlConnection(connectionString);
-            connection.Open();
+        using IDbConnection connection = new SqlConnection(connectionString);
+        connection.Open();
 
-            int result = connection.Execute(query, new
-            {
-                SaleId = saleId,
-                ProductId = productId,
-                Price = price,
-                Quantity = quantity,
-                SaleDate = saleDate
-            });
-
-            connection.Close();
-
-            string message = result > 0 ? "Sale Update successful." : "Sale Update failed.";
-            Console.WriteLine(message);
-        }
-
-        public void Delete(int saleId)
+        int result = connection.Execute(query, new
         {
-            string query = @"
+            SaleId = saleId,
+            ProductId = productId,
+            Price = price,
+            Quantity = quantity,
+            SaleDate = saleDate
+        });
+
+        connection.Close();
+
+        string message = result > 0 ? "Sale Update successful." : "Sale Update failed.";
+        Console.WriteLine(message);
+    }
+
+    public void Delete(int saleId)
+    {
+        string query = @"
                 DELETE 
                 FROM [dbo].[Tbl_Sale]
                 WHERE SaleId=@SaleId";
 
-            using IDbConnection connection = new SqlConnection(connectionString);
-            connection.Open();
+        using IDbConnection connection = new SqlConnection(connectionString);
+        connection.Open();
 
-            int result = connection.Execute(query, new { SaleId = saleId });
+        int result = connection.Execute(query, new { SaleId = saleId });
 
-            connection.Close();
+        connection.Close();
 
-            string message = result > 0 ? $"Delete Sale Id {saleId} successful." : $"Delete Sale Id {saleId} failed.";
-            Console.WriteLine(message);
-        }
+        string message = result > 0 ? $"Delete Sale Id {saleId} successful." : $"Delete Sale Id {saleId} failed.";
+        Console.WriteLine(message);
     }
 }
