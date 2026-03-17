@@ -18,7 +18,7 @@ namespace TB5.ConsoleApp.AdoDotNetSample
 
         public Student()
         {
-            
+
         }
 
         public void SetMark(int marks)

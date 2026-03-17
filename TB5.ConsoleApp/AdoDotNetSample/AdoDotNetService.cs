@@ -34,7 +34,7 @@ namespace TB5.ConsoleApp.AdoDotNetSample
                 await connection.OpenAsync();
                 return true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine("Failed to connect to SQL Server.");
                 Console.WriteLine(ex.Message);
@@ -180,7 +180,7 @@ namespace TB5.ConsoleApp.AdoDotNetSample
 
             string mesage = result > 0 ? $"Delete Product Id {productId} successful." : $"Delete Product Id {productId} failed.";
             Console.WriteLine(mesage);
-        }   
+        }
     }
 
     public class Tbl_Product
