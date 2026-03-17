@@ -1,6 +1,6 @@
 using TB5.ConsoleApp.DapperSample.DapperSample;
 
-var service = new DapperService();
+var service = new ProductSerice();
 
 //service.Create("Product 1", 100);
 Console.WriteLine("Displaying Products...");

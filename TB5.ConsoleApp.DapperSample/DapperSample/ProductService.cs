@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace TB5.ConsoleApp.DapperSample.DapperSample
 {
-    public class DapperService
+    public class ProductSerice
     {
         private string connectionString = Environment.GetEnvironmentVariable("LOCAL_SQL_CONNECTION_STRING")!;
 
