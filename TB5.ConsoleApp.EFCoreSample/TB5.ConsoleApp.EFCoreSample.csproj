@@ -7,4 +7,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\TB5.ConsoleApp.Database\TB5.ConsoleApp.Database.csproj" />
+  </ItemGroup>
+
 </Project>
