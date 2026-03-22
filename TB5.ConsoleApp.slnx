@@ -1,4 +1,9 @@
 <Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="README.md" />
+  </Folder>
   <Project Path="TB5.ConsoleApp.AdoDotNetSample/TB5.ConsoleApp.AdoDotNetSample.csproj" />
   <Project Path="TB5.ConsoleApp.DapperSample/TB5.ConsoleApp.DapperSample.csproj" Id="847d9f29-5e2e-41cf-bbe5-79c6abe01746" />
+  <Project Path="TB5.ConsoleApp.Database/TB5.ConsoleApp.Database.csproj" Id="186c6245-f6d4-4a3c-a3d6-3f2650d96ddb" />
+  <Project Path="TB5.ConsoleApp.EFCoreSample/TB5.ConsoleApp.EFCoreSample.csproj" Id="96a359ea-2ec5-4ecc-b5a6-b27ae6ab257f" />
 </Solution>
